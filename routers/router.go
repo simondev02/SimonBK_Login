@@ -18,7 +18,8 @@ func SetupRouter() *gin.Engine {
 	// Rutas para el modelo Usuario
 	usuario := r.Group("/usuario")
 	{
-		usuario.POST("/login/", controllers.Login) //login
+		usuario.POST("/login/", controllers.Login)    //login
+		usuario.POST("/refresh", controllers.Refresh) // Refresh
 	}
 
 	return r

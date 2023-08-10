@@ -44,6 +44,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to migrate table PermisoUsuario: %v", err)
 	}
+	err = db.DBConn.AutoMigrate(&models.RefreshToken{}) // Finalmente, la tabla "permiso_usuario"
+	if err != nil {
+		log.Fatalf("Failed to migrate table PermisoUsuario: %v", err)
+	}
 
 	fmt.Println("Migration successful")
 }
