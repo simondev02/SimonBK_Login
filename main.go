@@ -7,6 +7,9 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -17,9 +20,21 @@ func main() {
 		fmt.Println("Error al conectar con la base de datos:", err)
 		return
 	}
+	// Configurar CORS
 
 	// Configurar e iniciar el enrutador
-	r := routers.SetupRouter()
+	r := gin.Default()
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
+
+	// Configurar e iniciar el enrutador
+	r = routers.SetupRouter()
 
 	// Imprimir todas las rutas disponibles
 	for _, route := range r.Routes() {
