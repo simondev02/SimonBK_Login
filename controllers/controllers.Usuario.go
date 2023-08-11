@@ -17,12 +17,21 @@ type LoginInput struct {
 	Usuario    string `json:"usuario" binding:"required"`
 	Contrasena string `json:"contrasena" binding:"required"`
 }
+type CustomClaims struct {
+	jwt.StandardClaims
+	FkCompania int `json:"fk_compania"`
+	FkCliente  int `json:"fk_cliente"`
+}
 
 func GenerateAccessToken(usuario *models.Usuario) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
-	claims := &jwt.StandardClaims{
-		Subject:   usuario.Usuario,
-		ExpiresAt: expirationTime.Unix(),
+	claims := &CustomClaims{
+		StandardClaims: jwt.StandardClaims{
+			Subject:   usuario.Usuario,
+			ExpiresAt: expirationTime.Unix(),
+		},
+		FkCompania: usuario.FkCompania,
+		FkCliente:  usuario.FkCliente,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtKey)
