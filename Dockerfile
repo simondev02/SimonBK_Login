@@ -14,10 +14,10 @@ RUN go mod download
 COPY . .
 
 # Compilar la aplicación
-RUN go build -o main .
+RUN go build -o SimonBK_Login .
 
 # Exponer el puerto 8000 para la aplicación
-EXPOSE 8000
+EXPOSE 60000
 
 # Comando para ejecutar la aplicación
-CMD ["./main"]
+CMD ["./SimonBK_Login"]

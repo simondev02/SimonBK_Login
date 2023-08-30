@@ -2,6 +2,7 @@ package main
 
 import (
 	"SimonBK_Login/db"
+	"SimonBK_Login/migrate"
 	"SimonBK_Login/routers"
 	"fmt"
 	"os"
@@ -15,6 +16,7 @@ import (
 func main() {
 	// Establecer la conexión con la base de datos
 	err := db.ConnectDB()
+	migrate.RunMigrations()
 
 	if err != nil {
 		fmt.Println("Error al conectar con la base de datos:", err)
@@ -22,7 +24,6 @@ func main() {
 	}
 	// Configurar CORS
 
-	// Configurar e iniciar el enrutador
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
@@ -53,10 +54,11 @@ func main() {
 	}()
 
 	// Escuchar y servir
-	err = r.Run(":8000") // escucha y sirve en 0.0.0.0:8000 (por defecto)
+	err = r.Run(":60000") // escucha y sirve en 0.0.0.0:60000 (por defecto)
 
 	if err != nil {
 		fmt.Println("Error al iniciar el servidor:", err)
 		return
 	}
+
 }

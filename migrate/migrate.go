@@ -1,4 +1,4 @@
-package main
+package migrate
 
 import (
 	"SimonBK_Login/db"
@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func main() {
+func RunMigrations() {
 	err := db.ConnectDB()
 	if err != nil {
 		log.Fatalf("Could not connect to DB: %v", err)
