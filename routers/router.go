@@ -16,7 +16,7 @@ func SetupRouter() *gin.Engine {
 	r.Use(cors.New(config))
 
 	// Rutas para el modelo Usuario
-	usuario := r.Group("/usuario")
+	usuario := r.Group("/user")
 	{
 		usuario.POST("/login/", controllers.Login)    //login
 		usuario.POST("/refresh", controllers.Refresh) // Refresh

@@ -4,6 +4,7 @@ import (
 	"SimonBK_Login/db"
 	"SimonBK_Login/models"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -11,30 +12,31 @@ import (
 	"gorm.io/gorm"
 )
 
-var jwtKey = []byte("tu_clave_secreta")
-
 type LoginInput struct {
-	Usuario    string `json:"usuario" binding:"required"`
-	Contrasena string `json:"contrasena" binding:"required"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 type CustomClaims struct {
 	jwt.StandardClaims
-	FkCompania int `json:"fk_compania"`
-	FkCliente  int `json:"fk_cliente"`
+	FkCompany  int `json:"fk_company"`
+	FkCustomer int `json:"fk_customer"`
 }
 
-func GenerateAccessToken(usuario *models.Usuario) (string, error) {
+func GenerateAccessToken(user *models.User) (string, error) {
+
+	jwtKey := os.Getenv("JWT_KEY")
+
 	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &CustomClaims{
 		StandardClaims: jwt.StandardClaims{
-			Subject:   usuario.Usuario,
+			Subject:   user.Username,
 			ExpiresAt: expirationTime.Unix(),
 		},
-		FkCompania: usuario.FkCompania,
-		FkCliente:  usuario.FkCliente,
+		FkCompany:  user.FkCompany,
+		FkCustomer: user.FkCustomer,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err := token.SignedString([]byte(jwtKey))
 	if err != nil {
 		return "", err
 	}
@@ -48,23 +50,23 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	var usuario models.Usuario
-	if err := models.GetUsuarioByUsuario(&usuario, input.Usuario); err != nil {
+	var username models.User
+	if err := models.GetUsuarioByUsuario(&username, input.Username); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuario o contraseña incorrectos"})
 		return
 	}
 
-	if err := models.CheckPassword(&usuario, input.Contrasena); err != nil {
+	if err := models.CheckPassword(&username, input.Password); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuario o contraseña incorrectos"})
 		return
 	}
 
-	if err := models.CheckPassword(&usuario, input.Contrasena); err != nil {
+	if err := models.CheckPassword(&username, input.Password); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuario o contraseña incorrectos"})
 		return
 	}
 	// Crear un token JWT
-	tokenString, err := GenerateAccessToken(&usuario)
+	tokenString, err := GenerateAccessToken(&username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al firmar el token"})
 		return
@@ -73,12 +75,12 @@ func Login(c *gin.Context) {
 	var refreshToken *models.RefreshToken
 	// Busca un refreshToken existente para ese usuario.
 	var existingToken models.RefreshToken
-	err = db.DBConn.Where("usuario_id = ?", usuario.ID).First(&existingToken).Error
+	err = db.DBConn.Where("fk_user = ?", username.ID).First(&existingToken).Error
 
 	// Si el token existe, actualízalo
 	if err == nil {
 		// Crear un nuevo token de refresco
-		refreshToken, err = models.GenerateRefreshToken(&usuario)
+		refreshToken, err = models.GenerateRefreshToken(&username)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al generar el token de refresco"})
 			return
@@ -92,7 +94,7 @@ func Login(c *gin.Context) {
 		}
 	} else if err == gorm.ErrRecordNotFound {
 		// Si el token no existe, crea uno nuevo
-		refreshToken, err := models.GenerateRefreshToken(&usuario)
+		refreshToken, err := models.GenerateRefreshToken(&username)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al generar el token de refresco"})
 			return
@@ -117,30 +119,30 @@ func Login(c *gin.Context) {
 	}
 
 	// estructura del permiso para responder
-	type PermisoResponse struct {
+	type PermissionResponse struct {
 		ID         uint
-		FkUsuario  uint
-		FkRoles    uint
-		FkModulo   uint
-		Lectura    bool
-		Escritura  bool
-		Eliminar   bool
-		Actualizar bool
+		FkUsername uint
+		FkRole     uint
+		FkModule   uint
+		Read       bool
+		Write      bool
+		Delete     bool
+		Update     bool
 	}
 
 	// obtener los permisos del usuario
-	var permisos []PermisoResponse
-	db.DBConn.Table("permiso_usuarios").Where("fk_usuario = ?", usuario.ID).Scan(&permisos)
+	var permission []PermissionResponse
+	db.DBConn.Table("user_permissions").Where("fk_user = ?", username.ID).Scan(&permission)
 
 	c.JSON(http.StatusOK, gin.H{
 		"accessToken":  tokenString,
 		"refreshToken": refreshToken.Token,
 		"message":      "Inicio de sesión exitoso",
-		"id_usuario":   usuario.ID,
-		"nombre":       usuario.Nombre,
-		"id_compania":  usuario.FkCompania,
-		"id_cliente":   usuario.FkCliente,
-		"permisos":     permisos,
+		"id_username":  username.ID,
+		"name":         username.Name,
+		"id_company":   username.FkCompany,
+		"id_customer":  username.FkCustomer,
+		"permission":   permission,
 	})
 
 }
