@@ -6,6 +6,8 @@ import (
 
 type Module struct {
 	gorm.Model
-	Name        string
-	Description string
+	Name            string
+	Description     string
+	DeletedByUserID *uint
+	UpdatedByUserID *uint
 }

@@ -10,13 +10,15 @@ import (
 
 type User struct {
 	gorm.Model
-	Name       string
-	Username   string
-	Password   string
-	FkCompany  int
-	FkCustomer int
-	Company    Company  `gorm:"foreignKey:FkCompany"`
-	Customer   Customer `gorm:"foreignKey:FkCustomer"`
+	Name            string
+	Username        string
+	Password        string
+	DeletedByUserID *uint
+	UpdatedByUserID *uint
+	FkCompany       int
+	FkCustomer      int
+	Company         Company  `gorm:"foreignKey:FkCompany"`
+	Customer        Customer `gorm:"foreignKey:FkCustomer"`
 }
 
 // GetUsuarioByUsuario busca un usuario por nombre de usuario en la base de datos

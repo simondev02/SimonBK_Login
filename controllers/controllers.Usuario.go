@@ -18,8 +18,9 @@ type LoginInput struct {
 }
 type CustomClaims struct {
 	jwt.StandardClaims
-	FkCompany  int `json:"fk_company"`
-	FkCustomer int `json:"fk_customer"`
+	FkCompany  int  `json:"fk_company"`
+	FkCustomer int  `json:"fk_customer"`
+	UserId     uint `json:"userId"`
 }
 
 func GenerateAccessToken(user *models.User) (string, error) {
@@ -34,6 +35,7 @@ func GenerateAccessToken(user *models.User) (string, error) {
 		},
 		FkCompany:  user.FkCompany,
 		FkCustomer: user.FkCustomer,
+		UserId:     user.ID,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(jwtKey))

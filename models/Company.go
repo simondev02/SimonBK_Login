@@ -6,8 +6,11 @@ import (
 
 type Company struct {
 	gorm.Model
-	Name    string
-	Address string
-	Phone   string
-	Email   string
+	Name                 string `gorm:"unique"`
+	Address              string
+	Phone                string
+	Email                string
+	IdentificationNumber string `gorm:"unique"`
+	DeletedByUserID      *uint
+	UpdatedByUserID      *uint
 }

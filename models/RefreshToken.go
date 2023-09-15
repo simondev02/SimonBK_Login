@@ -9,10 +9,12 @@ import (
 
 type RefreshToken struct {
 	gorm.Model
-	Token      string
-	FkUser     uint
-	ExpiryDate time.Time
-	User       User `gorm:"foreignKey:FkUser"`
+	Token           string
+	FkUser          uint
+	ExpiryDate      time.Time
+	DeletedByUserID *uint
+	UpdatedByUserID *uint
+	User            User `gorm:"foreignKey:FkUser"`
 }
 
 func GenerateRefreshToken(user *User) (*RefreshToken, error) {

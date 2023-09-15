@@ -10,7 +10,9 @@ type Customer struct {
 	Address              string
 	PhoneNumber          string
 	Email                string
-	IdentificationNumber string
-	FkCompany            int
+	IdentificationNumber string `gorm:"uniqueIndex:idx_fkcompany_identification"`
+	FkCompany            int    `gorm:"uniqueIndex:idx_fkcompany_identification"`
+	DeletedByUserID      *uint
+	UpdatedByUserID      *uint
 	Company              Company `gorm:"foreignKey:FkCompany"`
 }
