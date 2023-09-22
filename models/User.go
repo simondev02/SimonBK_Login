@@ -17,8 +17,10 @@ type User struct {
 	UpdatedByUserID *uint
 	FkCompany       int
 	FkCustomer      int
+	FkRole          int
 	Company         Company  `gorm:"foreignKey:FkCompany"`
 	Customer        Customer `gorm:"foreignKey:FkCustomer"`
+	Role            Role     `gorm:"foreignKey:FkRole"`
 }
 
 // GetUsuarioByUsuario busca un usuario por nombre de usuario en la base de datos
