@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	swagger "SimonBK_Login/Swagger"
 	"SimonBK_Login/db"
 	"SimonBK_Login/models"
 	"net/http"
@@ -45,6 +46,16 @@ func GenerateAccessToken(user *models.User) (string, error) {
 	return tokenString, nil
 }
 
+// @Summary Iniciar sesión
+// @Description Autentica a un usuario y devuelve un token de acceso y un token de refresco
+// @Accept json
+// @Produce json
+// @Param login body swagger.LoginInput true "Credenciales del usuario"
+// @Success 200 {object} swagger.LoginResponse "Respuesta exitosa con tokens y detalles del usuario"
+// @Failure 400 {object} map[string]string "Error: Datos inválidos"
+// @Failure 401 {object} map[string]string "Error: Usuario o contraseña incorrectos"
+// @Failure 500 {object} map[string]string "Error interno del servidor"
+// @Router /user/login/ [post]
 func Login(c *gin.Context) {
 	var input LoginInput
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -54,11 +65,6 @@ func Login(c *gin.Context) {
 
 	var username models.User
 	if err := models.GetUsuarioByUsuario(&username, input.Username); err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuario o contraseña incorrectos"})
-		return
-	}
-
-	if err := models.CheckPassword(&username, input.Password); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuario o contraseña incorrectos"})
 		return
 	}
@@ -120,20 +126,8 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// estructura del permiso para responder
-	type PermissionResponse struct {
-		ID         uint
-		FkUsername uint
-		FkRole     uint
-		FkModule   uint
-		Read       bool
-		Write      bool
-		Delete     bool
-		Update     bool
-	}
-
 	// obtener los permisos del usuario
-	var permission []PermissionResponse
+	var permission []swagger.PermissionResponse
 	db.DBConn.Table("user_permissions").Where("fk_user = ?", username.ID).Scan(&permission)
 
 	c.JSON(http.StatusOK, gin.H{

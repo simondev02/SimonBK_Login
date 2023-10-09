@@ -1,7 +1,16 @@
+// @title Mi API
+// @description Esta es mi API
+// @version 1
+// @host localhost:60030
+// @BasePath /Vehicle
+// @SecurityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 package main
 
 import (
 	"SimonBK_Login/db"
+	"SimonBK_Login/docs"
 	"SimonBK_Login/migrate"
 	"SimonBK_Login/routers"
 	"fmt"
@@ -11,12 +20,21 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
 	// Establecer la conexión con la base de datos
 	err := db.ConnectDB()
 	migrate.RunMigrations()
+
+	// Configurar Swagger
+	docs.SwaggerInfo.Title = "Mi API"
+	docs.SwaggerInfo.Description = "Esta es mi API"
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = "localhost:60000"
+	docs.SwaggerInfo.BasePath = "/"
 
 	if err != nil {
 		fmt.Println("Error al conectar con la base de datos:", err)
@@ -36,6 +54,9 @@ func main() {
 
 	// Configurar e iniciar el enrutador
 	r = routers.SetupRouter()
+
+	// Agregar la ruta de Swagger sin el middleware de validación de token
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Imprimir todas las rutas disponibles
 	for _, route := range r.Routes() {
