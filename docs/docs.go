@@ -32,7 +32,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/swagger.LoginInput"
+                            "$ref": "#/definitions/swagger.LogingInput"
                         }
                     }
                 ],
@@ -72,24 +72,67 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/refresh": {
+            "post": {
+                "description": "Refresca un token de acceso utilizando un token de refresco válido",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Refrescar el token de acceso",
+                "parameters": [
+                    {
+                        "description": "Token de refresco",
+                        "name": "refreshToken",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/swagger.RefreshTokenInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa con un nuevo token de acceso",
+                        "schema": {
+                            "$ref": "#/definitions/swagger.accessTokenResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Datos inválidos",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error: Token inválido o expirado",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
-        "swagger.LoginInput": {
-            "type": "object",
-            "required": [
-                "password",
-                "username"
-            ],
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
         "swagger.LoginResponse": {
             "type": "object",
             "properties": {
@@ -122,6 +165,21 @@ const docTemplate = `{
                 }
             }
         },
+        "swagger.LogingInput": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "swagger.PermissionResponse": {
             "type": "object",
             "properties": {
@@ -148,6 +206,23 @@ const docTemplate = `{
                 },
                 "write": {
                     "type": "boolean"
+                }
+            }
+        },
+        "swagger.RefreshTokenInput": {
+            "type": "object",
+            "properties": {
+                "refreshToken": {
+                    "type": "string"
+                }
+            }
+        },
+        "swagger.accessTokenResponse": {
+            "type": "object",
+            "properties": {
+                "accessToken": {
+                    "type": "string",
+                    "example": "tu_nuevo_token_de_acceso_ejemplo"
                 }
             }
         }

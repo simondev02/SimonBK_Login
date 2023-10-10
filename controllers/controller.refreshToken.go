@@ -9,6 +9,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Refrescar el token de acceso
+// @Description Refresca un token de acceso utilizando un token de refresco válido
+// @Accept json
+// @Produce json
+// @Param refreshToken body swagger.RefreshTokenInput true "Token de refresco"
+// @Success 200 {object} swagger.accessTokenResponse "Respuesta exitosa con un nuevo token de acceso"
+// @Failure 400 {object} map[string]string "Error: Datos inválidos"
+// @Failure 401 {object} map[string]string "Error: Token inválido o expirado"
+// @Failure 500 {object} map[string]string "Error interno del servidor"
+// @Router /user/refresh [post]
 func Refresh(c *gin.Context) {
 	var input struct {
 		RefreshToken string `json:"refreshToken" binding:"required"`

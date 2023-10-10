@@ -1,15 +1,5 @@
 basePath: /Vehicle
 definitions:
-  swagger.LoginInput:
-    properties:
-      password:
-        type: string
-      username:
-        type: string
-    required:
-    - password
-    - username
-    type: object
   swagger.LoginResponse:
     properties:
       accessToken:
@@ -31,6 +21,16 @@ definitions:
       refreshToken:
         type: string
     type: object
+  swagger.LogingInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
   swagger.PermissionResponse:
     properties:
       delete:
@@ -49,6 +49,17 @@ definitions:
         type: boolean
       write:
         type: boolean
+    type: object
+  swagger.RefreshTokenInput:
+    properties:
+      refreshToken:
+        type: string
+    type: object
+  swagger.accessTokenResponse:
+    properties:
+      accessToken:
+        example: tu_nuevo_token_de_acceso_ejemplo
+        type: string
     type: object
 host: localhost:60030
 info:
@@ -69,7 +80,7 @@ paths:
         name: login
         required: true
         schema:
-          $ref: '#/definitions/swagger.LoginInput'
+          $ref: '#/definitions/swagger.LogingInput'
       produces:
       - application/json
       responses:
@@ -96,6 +107,44 @@ paths:
               type: string
             type: object
       summary: Iniciar sesión
+  /user/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresca un token de acceso utilizando un token de refresco válido
+      parameters:
+      - description: Token de refresco
+        in: body
+        name: refreshToken
+        required: true
+        schema:
+          $ref: '#/definitions/swagger.RefreshTokenInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa con un nuevo token de acceso
+          schema:
+            $ref: '#/definitions/swagger.accessTokenResponse'
+        "400":
+          description: 'Error: Datos inválidos'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: 'Error: Token inválido o expirado'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Error interno del servidor
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Refrescar el token de acceso
 securityDefinitions:
   ApiKeyAuth:
     in: header

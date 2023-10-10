@@ -50,7 +50,7 @@ func GenerateAccessToken(user *models.User) (string, error) {
 // @Description Autentica a un usuario y devuelve un token de acceso y un token de refresco
 // @Accept json
 // @Produce json
-// @Param login body swagger.LoginInput true "Credenciales del usuario"
+// @Param login body swagger.LogingInput true "Credenciales del usuario"
 // @Success 200 {object} swagger.LoginResponse "Respuesta exitosa con tokens y detalles del usuario"
 // @Failure 400 {object} map[string]string "Error: Datos inválidos"
 // @Failure 401 {object} map[string]string "Error: Usuario o contraseña incorrectos"
