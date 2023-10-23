@@ -32,7 +32,7 @@ func main() {
 	docs.SwaggerInfo.Title = "Mi API"
 	docs.SwaggerInfo.Description = "Esta es mi API"
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "172.25.214.69:60000"
+	docs.SwaggerInfo.Host = "localhost:60000"
 	docs.SwaggerInfo.BasePath = "/"
 
 	if err != nil {
@@ -58,9 +58,9 @@ func main() {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Imprimir todas las rutas disponibles
-	for _, route := range r.Routes() {
-		fmt.Println(route.Path)
-	}
+	// for _, route := range r.Routes() {
+	// 	fmt.Println(route.Path)
+	// }
 
 	// Configurar la señal de captura
 	c := make(chan os.Signal, 1)

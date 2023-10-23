@@ -21,6 +21,7 @@ type CustomClaims struct {
 	FkCompany  int  `json:"fk_company"`
 	FkCustomer int  `json:"fk_customer"`
 	UserId     uint `json:"userId"`
+	RoleId     uint `json:"roleId"`
 }
 
 func GenerateAccessToken(user *models.UserDetail) (string, error) {
@@ -36,6 +37,7 @@ func GenerateAccessToken(user *models.UserDetail) (string, error) {
 		FkCompany:  user.Fk_Company,
 		FkCustomer: user.Fk_Customer,
 		UserId:     user.ID,
+		RoleId:     user.Fk_Role,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(jwtKey))

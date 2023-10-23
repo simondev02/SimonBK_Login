@@ -27,7 +27,7 @@ type UserDetail struct {
 	Username        string
 	Password        string
 	Name            string
-	Fk_Role         int
+	Fk_Role         uint
 	RoleDescription string
 	Fk_Company      int
 	Fk_Customer     int
