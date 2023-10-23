@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	swagger "SimonBK_Login/Swagger"
 	"SimonBK_Login/db"
 	"SimonBK_Login/models"
 	"net/http"
@@ -24,7 +23,7 @@ type CustomClaims struct {
 	UserId     uint `json:"userId"`
 }
 
-func GenerateAccessToken(user *models.User) (string, error) {
+func GenerateAccessToken(user *models.UserDetail) (string, error) {
 
 	jwtKey := os.Getenv("JWT_KEY")
 
@@ -34,8 +33,8 @@ func GenerateAccessToken(user *models.User) (string, error) {
 			Subject:   user.Username,
 			ExpiresAt: expirationTime.Unix(),
 		},
-		FkCompany:  user.FkCompany,
-		FkCustomer: user.FkCustomer,
+		FkCompany:  user.Fk_Company,
+		FkCustomer: user.Fk_Customer,
 		UserId:     user.ID,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -50,12 +49,12 @@ func GenerateAccessToken(user *models.User) (string, error) {
 // @Description Autentica a un usuario y devuelve un token de acceso y un token de refresco
 // @Accept json
 // @Produce json
-// @Param login body swagger.LogingInput true "Credenciales del usuario"
+// @Param login body LoginInput true "Credenciales del usuario"
 // @Success 200 {object} swagger.LoginResponse "Respuesta exitosa con tokens y detalles del usuario"
 // @Failure 400 {object} map[string]string "Error: Datos inválidos"
 // @Failure 401 {object} map[string]string "Error: Usuario o contraseña incorrectos"
 // @Failure 500 {object} map[string]string "Error interno del servidor"
-// @Router /user/login/ [post]
+// @Router /users/login/ [post]
 func Login(c *gin.Context) {
 	var input LoginInput
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -63,8 +62,8 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	var username models.User
-	if err := models.GetUsuarioByUsuario(&username, input.Username); err != nil {
+	var username models.UserDetail
+	if err := models.GetUserDetail(&username, input.Username); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuario o contraseña incorrectos"})
 		return
 	}
@@ -73,6 +72,8 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuario o contraseña incorrectos"})
 		return
 	}
+
+	// var userInfo
 	// Crear un token JWT
 	tokenString, err := GenerateAccessToken(&username)
 	if err != nil {
@@ -126,19 +127,16 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// obtener los permisos del usuario
-	var permission []swagger.PermissionResponse
-	db.DBConn.Table("user_permissions").Where("fk_user = ?", username.ID).Scan(&permission)
-
 	c.JSON(http.StatusOK, gin.H{
 		"accessToken":  tokenString,
 		"refreshToken": refreshToken.Token,
 		"message":      "Inicio de sesión exitoso",
-		"id_username":  username.ID,
+		"userId":       username.ID,
+		"username":     username.Username,
 		"name":         username.Name,
-		"id_company":   username.FkCompany,
-		"id_customer":  username.FkCustomer,
-		"permission":   permission,
+		"id_company":   username.Fk_Company,
+		"id_customer":  username.Fk_Customer,
+		"roleId":       username.Fk_Role,
+		"role":         username.RoleDescription,
 	})
-
 }

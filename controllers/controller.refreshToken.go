@@ -18,7 +18,7 @@ import (
 // @Failure 400 {object} map[string]string "Error: Datos inválidos"
 // @Failure 401 {object} map[string]string "Error: Token inválido o expirado"
 // @Failure 500 {object} map[string]string "Error interno del servidor"
-// @Router /user/refresh [post]
+// @Router /users/refresh [post]
 func Refresh(c *gin.Context) {
 	var input struct {
 		RefreshToken string `json:"refreshToken" binding:"required"`
@@ -43,7 +43,7 @@ func Refresh(c *gin.Context) {
 	}
 
 	// Obtiene el usuario asociado con el token de actualización
-	var user models.User
+	var user models.UserDetail
 	if err := db.DBConn.First(&user, refreshToken.FkUser).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al obtener el usuario"})
 		return

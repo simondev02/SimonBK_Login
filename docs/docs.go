@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/user/login/": {
+        "/users/login/": {
             "post": {
                 "description": "Autentica a un usuario y devuelve un token de acceso y un token de refresco",
                 "consumes": [
@@ -32,7 +32,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/swagger.LogingInput"
+                            "$ref": "#/definitions/controllers.LoginInput"
                         }
                     }
                 ],
@@ -73,7 +73,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/refresh": {
+        "/users/refresh": {
             "post": {
                 "description": "Refresca un token de acceso utilizando un token de refresco válido",
                 "consumes": [
@@ -130,9 +130,89 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/resources/{roleid}": {
+            "get": {
+                "description": "Retrieve resources associated with a specific role ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "resources"
+                ],
+                "summary": "Get resources by role ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Role ID",
+                        "name": "roleid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved resources",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ResourceResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid role ID",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error fetching resources",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "controllers.LoginInput": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ResourceResponse": {
+            "type": "object",
+            "properties": {
+                "actions": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "resourceName": {
+                    "type": "string"
+                }
+            }
+        },
         "swagger.LoginResponse": {
             "type": "object",
             "properties": {
@@ -161,21 +241,6 @@ const docTemplate = `{
                     }
                 },
                 "refreshToken": {
-                    "type": "string"
-                }
-            }
-        },
-        "swagger.LogingInput": {
-            "type": "object",
-            "required": [
-                "password",
-                "username"
-            ],
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
                     "type": "string"
                 }
             }

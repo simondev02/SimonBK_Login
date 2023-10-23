@@ -35,15 +35,15 @@ func RunMigrations() {
 		log.Fatalf("Failed to migrate table Modulo: %v", err)
 	}
 
-	err = db.DBConn.AutoMigrate(&models.Role{}) // Luego, la tabla "rol"
-	if err != nil {
-		log.Fatalf("Failed to migrate table Rol: %v", err)
-	}
+	// err = db.DBConn.AutoMigrate(&models.Role{}) // Luego, la tabla "rol"
+	// if err != nil {
+	// 	log.Fatalf("Failed to migrate table Rol: %v", err)
+	// }
 
-	err = db.DBConn.AutoMigrate(&models.UserPermission{}) // Finalmente, la tabla "permiso_usuario"
-	if err != nil {
-		log.Fatalf("Failed to migrate table PermisoUsuario: %v", err)
-	}
+	// err = db.DBConn.AutoMigrate(&models.UserPermission{}) // Finalmente, la tabla "permiso_usuario"
+	// if err != nil {
+	// 	log.Fatalf("Failed to migrate table PermisoUsuario: %v", err)
+	// }
 	err = db.DBConn.AutoMigrate(&models.RefreshToken{}) // Finalmente, la tabla "permiso_usuario"
 	if err != nil {
 		log.Fatalf("Failed to migrate table PermisoUsuario: %v", err)

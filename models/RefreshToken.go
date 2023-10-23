@@ -17,14 +17,14 @@ type RefreshToken struct {
 	User            User `gorm:"foreignKey:FkUser"`
 }
 
-func GenerateRefreshToken(user *User) (*RefreshToken, error) {
+func GenerateRefreshToken(User *UserDetail) (*RefreshToken, error) {
 	// Genera un token de actualización aleatorio
 	// (Puedes usar una biblioteca como github.com/google/uuid para esto)
 	token := uuid.New().String()
 
 	refreshToken := &RefreshToken{
 		Token:      token,
-		FkUser:     user.ID,
+		FkUser:     User.ID,
 		ExpiryDate: time.Now().Add(time.Hour * 24 * 7), // Por ejemplo, 7 días
 	}
 

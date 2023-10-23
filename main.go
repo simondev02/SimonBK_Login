@@ -11,7 +11,6 @@ package main
 import (
 	"SimonBK_Login/db"
 	"SimonBK_Login/docs"
-	"SimonBK_Login/migrate"
 	"SimonBK_Login/routers"
 	"fmt"
 	"os"
@@ -26,14 +25,14 @@ import (
 
 func main() {
 	// Establecer la conexión con la base de datos
+	// migrate.RunMigrations() -> ejecutar migraciones, descomentar para crear bbdd
 	err := db.ConnectDB()
-	migrate.RunMigrations()
 
 	// Configurar Swagger
 	docs.SwaggerInfo.Title = "Mi API"
 	docs.SwaggerInfo.Description = "Esta es mi API"
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "localhost:60000"
+	docs.SwaggerInfo.Host = "172.25.214.69:60000"
 	docs.SwaggerInfo.BasePath = "/"
 
 	if err != nil {
@@ -46,7 +45,7 @@ func main() {
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"POST"},
+		AllowMethods:     []string{"POST", "GET", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
@@ -81,5 +80,4 @@ func main() {
 		fmt.Println("Error al iniciar el servidor:", err)
 		return
 	}
-
 }
