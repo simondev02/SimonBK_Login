@@ -10,12 +10,20 @@ definitions:
     - password
     - username
     type: object
+  models.ActionRoles:
+    properties:
+      roles:
+        items:
+          type: string
+        type: array
+    type: object
   models.ResourceResponse:
     properties:
       actions:
-        additionalProperties: true
+        additionalProperties:
+          $ref: '#/definitions/models.ActionRoles'
         type: object
-      resourceName:
+      resource:
         type: string
     type: object
   swagger.LoginResponse:
@@ -153,17 +161,11 @@ paths:
               type: string
             type: object
       summary: Refrescar el token de acceso
-  /users/resources/{roleid}:
+  /users/resources:
     get:
       consumes:
       - application/json
       description: Retrieve resources associated with a specific role ID
-      parameters:
-      - description: Role ID
-        in: path
-        name: roleid
-        required: true
-        type: integer
       produces:
       - application/json
       responses:
@@ -173,12 +175,6 @@ paths:
             items:
               $ref: '#/definitions/models.ResourceResponse'
             type: array
-        "400":
-          description: Invalid role ID
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "500":
           description: Error fetching resources
           schema:

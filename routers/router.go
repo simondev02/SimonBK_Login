@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"SimonBK_Login/controllers"
+	"SimonBK_Login/api/controllers"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -19,8 +19,8 @@ func SetupRouter() *gin.Engine {
 	usuario := r.Group("/users")
 	{
 		usuario.POST("/login/", controllers.Login)
-		usuario.GET("/resources/:roleid/", controllers.Resources) //login
-		usuario.POST("/refresh", controllers.Refresh)             // Refresh
+		usuario.GET("/resources", controllers.Resources) //login
+		usuario.POST("/refresh", controllers.Refresh)    // Refresh
 	}
 	return r
 }

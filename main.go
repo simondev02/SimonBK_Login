@@ -32,7 +32,7 @@ func main() {
 	docs.SwaggerInfo.Title = "Auth API"
 	docs.SwaggerInfo.Description = "API for user auth"
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "localhost:60000"
+	docs.SwaggerInfo.Host = "192.168.40.104:60000"
 	docs.SwaggerInfo.BasePath = "/"
 
 	if err != nil {

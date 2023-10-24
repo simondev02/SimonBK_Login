@@ -131,7 +131,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/resources/{roleid}": {
+        "/users/resources": {
             "get": {
                 "description": "Retrieve resources associated with a specific role ID",
                 "consumes": [
@@ -144,15 +144,6 @@ const docTemplate = `{
                     "resources"
                 ],
                 "summary": "Get resources by role ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Role ID",
-                        "name": "roleid",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Successfully retrieved resources",
@@ -160,15 +151,6 @@ const docTemplate = `{
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/models.ResourceResponse"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid role ID",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
                             }
                         }
                     },
@@ -201,14 +183,27 @@ const docTemplate = `{
                 }
             }
         },
+        "models.ActionRoles": {
+            "type": "object",
+            "properties": {
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "models.ResourceResponse": {
             "type": "object",
             "properties": {
                 "actions": {
                     "type": "object",
-                    "additionalProperties": true
+                    "additionalProperties": {
+                        "$ref": "#/definitions/models.ActionRoles"
+                    }
                 },
-                "resourceName": {
+                "resource": {
                     "type": "string"
                 }
             }
