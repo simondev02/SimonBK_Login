@@ -10,13 +10,14 @@ import (
 
 type User struct {
 	gorm.Model
+	ID              uint
 	Username        string
 	Password        string
-	DeletedByUserID *uint
-	UpdatedByUserID *uint
-	FkCompany       int
-	FkCustomer      int
-	FkRole          int
+	Name            string
+	Fk_Role         uint
+	RoleDescription string
+	Fk_Company      int
+	Fk_Customer     int
 	// Company         Company  `gorm:"foreignKey:FkCompany"`
 	// Customer        Customer `gorm:"foreignKey:FkCustomer"`
 	// Role            Role     `gorm:"foreignKey:FkRole"`

@@ -17,7 +17,7 @@ type RefreshToken struct {
 	User            User `gorm:"foreignKey:FkUser"`
 }
 
-func GenerateRefreshToken(User *UserDetail) (*RefreshToken, error) {
+func GenerateRefreshToken(User *User) (*RefreshToken, error) {
 	// Genera un token de actualización aleatorio
 	// (Puedes usar una biblioteca como github.com/google/uuid para esto)
 	token := uuid.New().String()
