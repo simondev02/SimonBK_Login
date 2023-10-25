@@ -42,14 +42,15 @@ func Refresh(c *gin.Context) {
 		return
 	}
 
-	// Obtiene el usuario asociado con el token de actualización
-	var user models.User
-	if err := db.DBConn.First(&user, refreshToken.FkUser).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al obtener el usuario"})
+	// Obtiene el detalle del usuario asociado con el token de actualización
+	var userDetail models.UserDetail
+
+	if err := models.GetUserDetailByToken(&userDetail, refreshToken.Token); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al obtener detalles del usuario"})
 		return
 	}
-	// Genera un nuevo token de acceso
-	accessToken, err := GenerateAccessToken(&user)
+	// Genera un nuevo token de acceso usando esos detalles
+	accessToken, err := GenerateAccessToken(&userDetail)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -24,7 +24,7 @@ type CustomClaims struct {
 	RoleId     uint `json:"roleId"`
 }
 
-func GenerateAccessToken(user *models.User) (string, error) {
+func GenerateAccessToken(user *models.UserDetail) (string, error) {
 
 	jwtKey := os.Getenv("JWT_KEY")
 
@@ -75,9 +75,9 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	var user models.User
+	// var user models.UserDetail
 	// Crear un token JWT
-	tokenString, err := GenerateAccessToken(&user)
+	tokenString, err := GenerateAccessToken(&username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al firmar el token"})
 		return
@@ -90,7 +90,7 @@ func Login(c *gin.Context) {
 	// Si el token existe, actualízalo
 	if err == nil {
 		// Crear un nuevo token de refresco
-		refreshToken, err = models.GenerateRefreshToken(&user)
+		refreshToken, err = models.GenerateRefreshToken(&username)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al generar el token de refresco"})
 			return
@@ -104,7 +104,7 @@ func Login(c *gin.Context) {
 		}
 	} else if err == gorm.ErrRecordNotFound {
 		// Si el token no existe, crea uno nuevo
-		refreshToken, err := models.GenerateRefreshToken(&user)
+		refreshToken, err := models.GenerateRefreshToken(&username)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al generar el token de refresco"})
 			return
