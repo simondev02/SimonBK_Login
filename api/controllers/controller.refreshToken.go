@@ -1,13 +1,7 @@
 package controllers
 
-import (
-	"SimonBK_Login/db"
-	"SimonBK_Login/models"
-	"net/http"
-	"time"
-
-	"github.com/gin-gonic/gin"
-)
+// "SimonBK_Login/db"
+// "SimonBK_Login/models"
 
 // @Summary Refrescar el token de acceso
 // @Description Refresca un token de acceso utilizando un token de refresco válido
@@ -19,44 +13,44 @@ import (
 // @Failure 401 {object} map[string]string "Error: Token inválido o expirado"
 // @Failure 500 {object} map[string]string "Error interno del servidor"
 // @Router /users/refresh [post]
-func Refresh(c *gin.Context) {
-	var input struct {
-		RefreshToken string `json:"refreshToken" binding:"required"`
-	}
+// func Refresh(c *gin.Context) {
+// 	var input struct {
+// 		RefreshToken string `json:"refreshToken" binding:"required"`
+// 	}
 
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+// 	if err := c.ShouldBindJSON(&input); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
 
-	// Busca el token de actualización en la base de datos
-	var refreshToken models.RefreshToken
-	if err := db.DBConn.Where("token = ?", input.RefreshToken).First(&refreshToken).Error; err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
-		return
-	}
+// 	// Busca el token de actualización en la base de datos
+// 	var refreshToken models.RefreshToken
+// 	if err := db.DBConn.Where("token = ?", input.RefreshToken).First(&refreshToken).Error; err != nil {
+// 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
+// 		return
+// 	}
 
-	// Comprueba la fecha de caducidad
-	if refreshToken.ExpiryDate.Before(time.Now()) {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token expirado"})
-		return
-	}
+// 	// Comprueba la fecha de caducidad
+// 	if refreshToken.ExpiryDate.Before(time.Now()) {
+// 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token expirado"})
+// 		return
+// 	}
 
-	// Obtiene el detalle del usuario asociado con el token de actualización
-	var userDetail models.UserDetail
+// 	// Obtiene el detalle del usuario asociado con el token de actualización
+// 	var userDetail models.UserDetail
 
-	if err := models.GetUserDetailByToken(&userDetail, refreshToken.Token); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al obtener detalles del usuario"})
-		return
-	}
-	// Genera un nuevo token de acceso usando esos detalles
-	accessToken, err := GenerateAccessToken(&userDetail)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+// 	if err := models.GetUserDetailByToken(&userDetail, refreshToken.Token); err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al obtener detalles del usuario"})
+// 		return
+// 	}
+// 	// Genera un nuevo token de acceso usando esos detalles
+// 	accessToken, err := utilities.GenerateAccessToken(&userDetail)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+// 		return
+// 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"accessToken": accessToken,
-	})
-}
+// 	c.JSON(http.StatusOK, gin.H{
+// 		"accessToken": accessToken,
+// 	})
+// }

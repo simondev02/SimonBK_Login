@@ -1,6 +1,6 @@
 package models
 
-import "SimonBK_Login/db"
+import "SimonBK_Login/infra/db"
 
 // ResourceResponse representa la estructura de la respuesta para la recuperación de recursos
 type ResourceResponse struct {

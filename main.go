@@ -9,8 +9,8 @@
 package main
 
 import (
-	"SimonBK_Login/db"
 	"SimonBK_Login/docs"
+	"SimonBK_Login/infra/db"
 	"SimonBK_Login/routers"
 	"fmt"
 	"os"
