@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -13,11 +12,6 @@ import (
 var DBConn *gorm.DB
 
 func ConnectDB() error {
-	err := godotenv.Load()
-
-	if err != nil {
-		log.Println("Error al leer variables de entorno", err)
-	}
 
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
@@ -26,7 +20,7 @@ func ConnectDB() error {
 	dbName := os.Getenv("DB_NAME")
 	DSN := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=require", dbHost, dbPort, dbUser, dbPass, dbName)
 
-	//var err error
+	var err error
 	DBConn, err = gorm.Open(postgres.Open(DSN), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)

@@ -1,11 +1,3 @@
-// @title Mi API
-// @description Esta es mi API
-// @version 1
-// @host 172.25.214.69:60000
-// @BasePath /Vehicle
-// @SecurityDefinitions.apikey ApiKeyAuth
-// @in header
-// @name Authorization
 package main
 
 import (
@@ -19,20 +11,26 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
+	// Cargar variables de entorno
+	err := godotenv.Load()
+	if err != nil {
+		return
+	}
 	// Establecer la conexión con la base de datos
 	// migrate.RunMigrations() -> ejecutar migraciones, descomentar para crear bbdd
-	err := db.ConnectDB()
+	err = db.ConnectDB()
 
 	// Configurar Swagger
 	docs.SwaggerInfo.Title = "Auth API"
 	docs.SwaggerInfo.Description = "API for user auth"
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "172.25.214.69:60000"
+	docs.SwaggerInfo.Host = os.Getenv("SWAGGER_HOST")
 	docs.SwaggerInfo.BasePath = "/"
 
 	if err != nil {

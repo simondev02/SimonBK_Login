@@ -1,4 +1,3 @@
-basePath: /Vehicle
 definitions:
   views.LoginForm:
     properties:
@@ -61,12 +60,8 @@ definitions:
       role:
         type: string
     type: object
-host: 172.25.214.69:60000
 info:
   contact: {}
-  description: Esta es mi API
-  title: Mi API
-  version: "1"
 paths:
   /users/login/:
     post:
@@ -157,9 +152,4 @@ paths:
       summary: Get resources by role ID
       tags:
       - resources
-securityDefinitions:
-  ApiKeyAuth:
-    in: header
-    name: Authorization
-    type: apiKey
 swagger: "2.0"
