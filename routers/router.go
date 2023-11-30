@@ -19,8 +19,8 @@ func SetupRouter() *gin.Engine {
 	usuario := r.Group("/users")
 	{
 		usuario.POST("/login/", controllers.Login)
-		// usuario.GET("/resources", controllers.Resources) //login
-		// usuario.POST("/refresh", controllers.Refresh)    // Refresh
+		usuario.GET("/resources", controllers.Resources)          //login
+		usuario.POST("/refresh", controllers.RefreshTokenHandler) // Refresh
 	}
 	return r
 }

@@ -1,83 +1,67 @@
 basePath: /Vehicle
 definitions:
-  controllers.LoginInput:
+  views.LoginForm:
     properties:
+      email:
+        type: string
       password:
         type: string
-      username:
+    type: object
+  views.RefreshTokenForm:
+    properties:
+      refreshToken:
         type: string
-    required:
-    - password
-    - username
     type: object
-  models.ActionRoles:
+  views.RefreshTokenResponse:
     properties:
-      roles:
-        items:
-          type: string
-        type: array
+      accesstoken:
+        type: string
+      refreshtoken:
+        type: string
     type: object
-  models.ResourceResponse:
+  views.ResourceResponse:
     properties:
-      actions:
-        additionalProperties:
-          $ref: '#/definitions/models.ActionRoles'
-        type: object
+      actions: {}
       resource:
         type: string
     type: object
-  swagger.LoginResponse:
+  views.Response:
     properties:
-      accessToken:
+      accesstoken:
         type: string
-      id_company:
-        type: integer
-      id_customer:
-        type: integer
-      id_username:
+      failedattempts:
         type: integer
       message:
         type: string
-      name:
+      refreshtoken:
         type: string
-      permission:
-        items:
-          $ref: '#/definitions/swagger.PermissionResponse'
-        type: array
-      refreshToken:
-        type: string
-    type: object
-  swagger.PermissionResponse:
-    properties:
-      delete:
+      success:
         type: boolean
-      fk_module:
+      user:
+        $ref: '#/definitions/views.User'
+    type: object
+  views.User:
+    properties:
+      email:
+        type: string
+      fkcompany:
         type: integer
-      fk_role:
+      fkcustomer:
         type: integer
-      fk_username:
+      fkrole:
         type: integer
       id:
         type: integer
-      read:
-        type: boolean
-      update:
-        type: boolean
-      write:
-        type: boolean
-    type: object
-  swagger.RefreshTokenInput:
-    properties:
-      refreshToken:
+      lastlogin:
+        type: string
+      lastname:
+        type: string
+      name:
+        type: string
+      role:
         type: string
     type: object
-  swagger.accessTokenResponse:
-    properties:
-      accessToken:
-        example: tu_nuevo_token_de_acceso_ejemplo
-        type: string
-    type: object
-host: localhost:60030
+host: 172.25.214.69:60000
 info:
   contact: {}
   description: Esta es mi API
@@ -89,40 +73,31 @@ paths:
       consumes:
       - application/json
       description: Autentica a un usuario y devuelve un token de acceso y un token
-        de refresco
+        de refresco.
       parameters:
       - description: Credenciales del usuario
         in: body
         name: login
         required: true
         schema:
-          $ref: '#/definitions/controllers.LoginInput'
+          $ref: '#/definitions/views.LoginForm'
       produces:
       - application/json
       responses:
         "200":
           description: Respuesta exitosa con tokens y detalles del usuario
           schema:
-            $ref: '#/definitions/swagger.LoginResponse'
+            $ref: '#/definitions/views.Response'
         "400":
-          description: 'Error: Datos inválidos'
-          schema:
-            additionalProperties:
-              type: string
-            type: object
+          description: 'Error: Datos inválidos o problema con el formato del email'
         "401":
-          description: 'Error: Usuario o contraseña incorrectos'
-          schema:
-            additionalProperties:
-              type: string
-            type: object
+          description: 'Error: Credenciales incorrectas o intento de inicio de sesión
+            fallido'
         "500":
           description: Error interno del servidor
-          schema:
-            additionalProperties:
-              type: string
-            type: object
       summary: Iniciar sesión
+      tags:
+      - autenticación
   /users/refresh:
     post:
       consumes:
@@ -134,14 +109,14 @@ paths:
         name: refreshToken
         required: true
         schema:
-          $ref: '#/definitions/swagger.RefreshTokenInput'
+          $ref: '#/definitions/views.RefreshTokenForm'
       produces:
       - application/json
       responses:
         "200":
           description: Respuesta exitosa con un nuevo token de acceso
           schema:
-            $ref: '#/definitions/swagger.accessTokenResponse'
+            $ref: '#/definitions/views.RefreshTokenResponse'
         "400":
           description: 'Error: Datos inválidos'
           schema:
@@ -172,9 +147,7 @@ paths:
         "200":
           description: Successfully retrieved resources
           schema:
-            items:
-              $ref: '#/definitions/models.ResourceResponse'
-            type: array
+            $ref: '#/definitions/views.ResourceResponse'
         "500":
           description: Error fetching resources
           schema:

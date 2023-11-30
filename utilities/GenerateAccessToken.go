@@ -21,6 +21,7 @@ func GenerateAccessToken(user views.User) (string, error) {
 	jwtKey := os.Getenv("JWT_KEY")
 	expirationTime := time.Now().Add(24 * time.Hour)
 	idStr := strconv.FormatUint(uint64(user.ID), 10)
+
 	claims := &CustomClaims{
 		StandardClaims: jwt.StandardClaims{
 			Subject:   idStr,

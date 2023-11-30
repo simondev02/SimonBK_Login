@@ -17,12 +17,15 @@ const docTemplate = `{
     "paths": {
         "/users/login/": {
             "post": {
-                "description": "Autentica a un usuario y devuelve un token de acceso y un token de refresco",
+                "description": "Autentica a un usuario y devuelve un token de acceso y un token de refresco.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "autenticación"
                 ],
                 "summary": "Iniciar sesión",
                 "parameters": [
@@ -32,7 +35,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.LoginInput"
+                            "$ref": "#/definitions/views.LoginForm"
                         }
                     }
                 ],
@@ -40,35 +43,17 @@ const docTemplate = `{
                     "200": {
                         "description": "Respuesta exitosa con tokens y detalles del usuario",
                         "schema": {
-                            "$ref": "#/definitions/swagger.LoginResponse"
+                            "$ref": "#/definitions/views.Response"
                         }
                     },
                     "400": {
-                        "description": "Error: Datos inválidos",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
+                        "description": "Error: Datos inválidos o problema con el formato del email"
                     },
                     "401": {
-                        "description": "Error: Usuario o contraseña incorrectos",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
+                        "description": "Error: Credenciales incorrectas o intento de inicio de sesión fallido"
                     },
                     "500": {
-                        "description": "Error interno del servidor",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
+                        "description": "Error interno del servidor"
                     }
                 }
             }
@@ -90,7 +75,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/swagger.RefreshTokenInput"
+                            "$ref": "#/definitions/views.RefreshTokenForm"
                         }
                     }
                 ],
@@ -98,7 +83,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Respuesta exitosa con un nuevo token de acceso",
                         "schema": {
-                            "$ref": "#/definitions/swagger.accessTokenResponse"
+                            "$ref": "#/definitions/views.RefreshTokenResponse"
                         }
                     },
                     "400": {
@@ -148,10 +133,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Successfully retrieved resources",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.ResourceResponse"
-                            }
+                            "$ref": "#/definitions/views.ResourceResponse"
                         }
                     },
                     "500": {
@@ -168,121 +150,97 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.LoginInput": {
+        "views.LoginForm": {
             "type": "object",
-            "required": [
-                "password",
-                "username"
-            ],
             "properties": {
+                "email": {
+                    "type": "string"
+                },
                 "password": {
                     "type": "string"
-                },
-                "username": {
+                }
+            }
+        },
+        "views.RefreshTokenForm": {
+            "type": "object",
+            "properties": {
+                "refreshToken": {
                     "type": "string"
                 }
             }
         },
-        "models.ActionRoles": {
+        "views.RefreshTokenResponse": {
             "type": "object",
             "properties": {
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                "accesstoken": {
+                    "type": "string"
+                },
+                "refreshtoken": {
+                    "type": "string"
                 }
             }
         },
-        "models.ResourceResponse": {
+        "views.ResourceResponse": {
             "type": "object",
             "properties": {
-                "actions": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "$ref": "#/definitions/models.ActionRoles"
-                    }
-                },
+                "actions": {},
                 "resource": {
                     "type": "string"
                 }
             }
         },
-        "swagger.LoginResponse": {
+        "views.Response": {
             "type": "object",
             "properties": {
-                "accessToken": {
+                "accesstoken": {
                     "type": "string"
                 },
-                "id_company": {
-                    "type": "integer"
-                },
-                "id_customer": {
-                    "type": "integer"
-                },
-                "id_username": {
+                "failedattempts": {
                     "type": "integer"
                 },
                 "message": {
                     "type": "string"
                 },
-                "name": {
+                "refreshtoken": {
                     "type": "string"
                 },
-                "permission": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/swagger.PermissionResponse"
-                    }
+                "success": {
+                    "type": "boolean"
                 },
-                "refreshToken": {
-                    "type": "string"
+                "user": {
+                    "$ref": "#/definitions/views.User"
                 }
             }
         },
-        "swagger.PermissionResponse": {
+        "views.User": {
             "type": "object",
             "properties": {
-                "delete": {
-                    "type": "boolean"
+                "email": {
+                    "type": "string"
                 },
-                "fk_module": {
+                "fkcompany": {
                     "type": "integer"
                 },
-                "fk_role": {
+                "fkcustomer": {
                     "type": "integer"
                 },
-                "fk_username": {
+                "fkrole": {
                     "type": "integer"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "read": {
-                    "type": "boolean"
-                },
-                "update": {
-                    "type": "boolean"
-                },
-                "write": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "swagger.RefreshTokenInput": {
-            "type": "object",
-            "properties": {
-                "refreshToken": {
+                "lastlogin": {
                     "type": "string"
-                }
-            }
-        },
-        "swagger.accessTokenResponse": {
-            "type": "object",
-            "properties": {
-                "accessToken": {
-                    "type": "string",
-                    "example": "tu_nuevo_token_de_acceso_ejemplo"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
                 }
             }
         }
@@ -299,7 +257,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1",
-	Host:             "localhost:60030",
+	Host:             "172.25.214.69:60000",
 	BasePath:         "/Vehicle",
 	Schemes:          []string{},
 	Title:            "Mi API",

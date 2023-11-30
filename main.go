@@ -1,7 +1,7 @@
 // @title Mi API
 // @description Esta es mi API
 // @version 1
-// @host localhost:60030
+// @host 172.25.214.69:60000
 // @BasePath /Vehicle
 // @SecurityDefinitions.apikey ApiKeyAuth
 // @in header
@@ -32,7 +32,7 @@ func main() {
 	docs.SwaggerInfo.Title = "Auth API"
 	docs.SwaggerInfo.Description = "API for user auth"
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "192.168.40.104:60000"
+	docs.SwaggerInfo.Host = "172.25.214.69:60000"
 	docs.SwaggerInfo.BasePath = "/"
 
 	if err != nil {

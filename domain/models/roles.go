@@ -8,3 +8,7 @@ type Role struct {
 	DeletedByUserID *uint
 	UpdatedByUserID *uint
 }
+
+type ActionRoles struct {
+	Roles []string `json:"roles"`
+}
