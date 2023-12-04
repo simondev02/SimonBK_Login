@@ -13,5 +13,5 @@ type RefreshToken struct {
 	ExpiryDate      time.Time
 	DeletedByUserID *uint
 	UpdatedByUserID *uint
-	User            UsersDevs `gorm:"foreignKey:FkUser"`
+	User            Users `gorm:"foreignKey:FkUser"`
 }

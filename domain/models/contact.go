@@ -10,5 +10,5 @@ type Contact struct {
 	Address  string
 	Phone    string
 	Email    string
-	Users    []UsersDevs `gorm:"many2many:user_contacts;foreignKey:ID;joinForeignKey:FkContact;References:ID;joinReferences:FkUser"`
+	Users    []Users `gorm:"many2many:user_contacts;foreignKey:ID;joinForeignKey:FkContact;References:ID;joinReferences:FkUser"`
 }

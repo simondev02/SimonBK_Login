@@ -9,7 +9,7 @@ import (
 )
 
 func ValidatePassword(email string, password string) (bool, error) {
-	var user models.UsersDevs
+	var user models.Users
 	// Buscar el usuario por username(email)
 	db.DBConn.Where("email = ?", email).First(&user)
 	if user.ID == 0 {

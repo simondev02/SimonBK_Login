@@ -9,7 +9,7 @@ import (
 )
 
 func CreateRefreshToken(userId uint) (string, error) {
-
+	
 	refreshToken := models.RefreshToken{
 		FkUser:     userId,
 		Token:      uuid.New().String(),

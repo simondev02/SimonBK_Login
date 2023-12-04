@@ -7,7 +7,7 @@ import (
 )
 
 func GetUserByEmail(email string) (views.User, error) {
-	var User models.UsersDevs
+	var User models.Users
 
 	err := db.DBConn.Preload("Contacts").Preload("Role").Where("email = ?", email).First(&User).Error
 	if err != nil {
@@ -29,7 +29,7 @@ func GetUserByEmail(email string) (views.User, error) {
 }
 
 func GetUserById(id uint) (views.User, error) {
-	var User models.UsersDevs
+	var User models.Users
 
 	err := db.DBConn.Preload("Contacts").Preload("Role").Where("id = ?", id).First(&User).Error
 	if err != nil {

@@ -7,7 +7,7 @@ import (
 )
 
 func UpdateLastLogin(userId uint) (string, error) {
-	var user models.UsersDevs
+	var user models.Users
 
 	// Actualizar el campo last_login en la base de datos
 	now := time.Now()
