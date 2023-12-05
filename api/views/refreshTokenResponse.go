@@ -1,6 +1,6 @@
 package views
 
 type RefreshTokenResponse struct {
-	AccessToken  string `json:"accesstoken"`
-	RefreshToken string `json:"refreshtoken"`
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
 }

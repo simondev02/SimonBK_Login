@@ -30,7 +30,7 @@ func main() {
 	docs.SwaggerInfo.Title = "Auth API"
 	docs.SwaggerInfo.Description = "API for user auth"
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = os.Getenv("SWAGGER_HOST")
+	docs.SwaggerInfo.Host = os.Getenv("SERVICE_HOST") + ":" + os.Getenv("SERVICE_PORT")
 	docs.SwaggerInfo.BasePath = "/"
 
 	if err != nil {
@@ -72,7 +72,7 @@ func main() {
 	}()
 
 	// Escuchar y servir
-	err = r.Run(":60000") // escucha y sirve en 0.0.0.0:60000 (por defecto)
+	err = r.Run(":" + os.Getenv("SERVICE_PORT")) // escucha y sirve en 0.0.0.0:60000 (por defecto)
 
 	if err != nil {
 		fmt.Println("Error al iniciar el servidor:", err)

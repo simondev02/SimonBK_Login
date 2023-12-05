@@ -13,9 +13,9 @@ definitions:
     type: object
   views.RefreshTokenResponse:
     properties:
-      accesstoken:
+      accessToken:
         type: string
-      refreshtoken:
+      refreshToken:
         type: string
     type: object
   views.ResourceResponse:
@@ -26,13 +26,13 @@ definitions:
     type: object
   views.Response:
     properties:
-      accesstoken:
+      accessToken:
         type: string
-      failedattempts:
+      failedAttempts:
         type: integer
       message:
         type: string
-      refreshtoken:
+      refreshToken:
         type: string
       success:
         type: boolean
@@ -43,15 +43,15 @@ definitions:
     properties:
       email:
         type: string
-      fkcompany:
+      fkCompany:
         type: integer
-      fkcustomer:
+      fkCustomer:
         type: integer
-      fkrole:
+      fkRole:
         type: integer
       id:
         type: integer
-      lastlogin:
+      lastLogin:
         type: string
       lastname:
         type: string

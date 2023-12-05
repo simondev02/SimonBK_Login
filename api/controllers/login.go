@@ -40,7 +40,7 @@ func Login(c *gin.Context) {
 
 	user, err := userServices.GetUserByEmail(input.Email)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Error al obtener detalles del usuario"})
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Credenciales incorrectas"})
 		return
 	}
 

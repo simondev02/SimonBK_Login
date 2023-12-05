@@ -10,6 +10,6 @@ package models
 // Representación del resultado del query para obtener los privilegios de un rol
 type ResourceRoleAccess struct {
 	ResourceName string `gorm:"column:resource"`
-	Permission   string
-	RoleDesc     string `gorm:"column:RoleDescription"`
+	Action       string
+	RoleDesc     string `gorm:"column:role_description"`
 }

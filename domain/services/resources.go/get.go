@@ -21,9 +21,9 @@ func GetResourcesMap() ([]views.ResourceResponse, error) {
 		if _, ok := resourcesMap[result.ResourceName]; !ok {
 			resourcesMap[result.ResourceName] = make(map[string]models.ActionRoles)
 		}
-		actionRoles := resourcesMap[result.ResourceName][result.Permission]
+		actionRoles := resourcesMap[result.ResourceName][result.Action]
 		actionRoles.Roles = append(actionRoles.Roles, result.RoleDesc)
-		resourcesMap[result.ResourceName][result.Permission] = actionRoles
+		resourcesMap[result.ResourceName][result.Action] = actionRoles
 	}
 
 	var resources []views.ResourceResponse

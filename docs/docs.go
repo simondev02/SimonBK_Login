@@ -172,10 +172,10 @@ const docTemplate = `{
         "views.RefreshTokenResponse": {
             "type": "object",
             "properties": {
-                "accesstoken": {
+                "accessToken": {
                     "type": "string"
                 },
-                "refreshtoken": {
+                "refreshToken": {
                     "type": "string"
                 }
             }
@@ -192,16 +192,16 @@ const docTemplate = `{
         "views.Response": {
             "type": "object",
             "properties": {
-                "accesstoken": {
+                "accessToken": {
                     "type": "string"
                 },
-                "failedattempts": {
+                "failedAttempts": {
                     "type": "integer"
                 },
                 "message": {
                     "type": "string"
                 },
-                "refreshtoken": {
+                "refreshToken": {
                     "type": "string"
                 },
                 "success": {
@@ -218,19 +218,19 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
-                "fkcompany": {
+                "fkCompany": {
                     "type": "integer"
                 },
-                "fkcustomer": {
+                "fkCustomer": {
                     "type": "integer"
                 },
-                "fkrole": {
+                "fkRole": {
                     "type": "integer"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "lastlogin": {
+                "lastLogin": {
                     "type": "string"
                 },
                 "lastname": {
