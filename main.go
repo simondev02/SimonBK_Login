@@ -5,6 +5,7 @@ import (
 	"SimonBK_Login/infra/db"
 	"SimonBK_Login/routers"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -72,16 +73,16 @@ func main() {
 	}()
 
 	// // Escuchar y servir
-	// certFile := os.Getenv("TLS_CERT")
-	// certKey := os.Getenv("TLS_KEY")
-	// if certFile == "" || certKey == "" {
-	// 	log.Println("Error al leer las variables de entorno.")
-	// 	db.CloseDB()
-	// 	os.Exit(1)
-	// }
+	certFile := os.Getenv("TLS_CERT")
+	certKey := os.Getenv("TLS_KEY")
+	if certFile == "" || certKey == "" {
+		log.Println("Error al leer las variables de entorno.")
+		db.CloseDB()
+		os.Exit(1)
+	}
 
-	// err = r.RunTLS(":"+os.Getenv("SERVICE_PORT"), certFile, certKey) // escucha y sirve en 0.0.0.0:60000 (por defecto)
-	err = r.Run(":" + os.Getenv("SERVICE_PORT"))
+	err = r.RunTLS(":"+os.Getenv("SERVICE_PORT"), certFile, certKey) // escucha y sirve en 0.0.0.0:60000 (por defecto)
+	// err = r.Run(":" + os.Getenv("SERVICE_PORT"))
 	if err != nil {
 		fmt.Println("Error al iniciar el servidor:", err)
 		return
