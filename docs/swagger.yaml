@@ -63,7 +63,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /users/login/:
+  /auth/login/:
     post:
       consumes:
       - application/json

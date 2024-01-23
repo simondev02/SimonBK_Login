@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/users/login/": {
+        "/auth/login/": {
             "post": {
                 "description": "Autentica a un usuario y devuelve un token de acceso y un token de refresco.",
                 "consumes": [
