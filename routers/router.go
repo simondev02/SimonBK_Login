@@ -18,7 +18,7 @@ func SetupRouter() *gin.Engine {
 	// Rutas para el modelo Usuario
 	auth := r.Group("/auth")
 	{
-		auth.POST("/login/", controllers.Login)
+		auth.POST("/login/	", controllers.Login)
 		auth.GET("/resources", controllers.Resources)          //login
 		auth.POST("/refresh", controllers.RefreshTokenHandler) // Refresh
 	}
