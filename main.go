@@ -54,7 +54,7 @@ func main() {
 	r = routers.SetupRouter()
 
 	// Agregar la ruta de Swagger sin el middleware de validación de token
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.GET("/Login/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Imprimir todas las rutas disponibles
 	// for _, route := range r.Routes() {
