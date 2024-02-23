@@ -7,6 +7,7 @@ import (
 	token "SimonBK_Login/domain/services/token"
 	userServices "SimonBK_Login/domain/services/user"
 	"SimonBK_Login/utilities"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +24,7 @@ import (
 // @Failure 400 "Error: Datos inválidos o problema con el formato del email"
 // @Failure 401 "Error: Credenciales incorrectas o intento de inicio de sesión fallido"
 // @Failure 500 "Error interno del servidor"
-// @Router /users/login/ [post]
+// @Router /auth/login/ [post]
 func Login(c *gin.Context) {
 	var input views.LoginForm
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -66,6 +67,7 @@ func Login(c *gin.Context) {
 	// Crear un token de actualización
 	refreshToken, err := token.GenerateRefreshToken(user.ID)
 	if err != nil {
+		log.Println("Error al generar token de refresco: ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Error al generar el token de refresco"})
 		return
 	}

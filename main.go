@@ -51,7 +51,7 @@ func main() {
 	}))
 
 	// Configurar e iniciar el enrutador
-	r = routers.SetupRouter()
+	routers.SetupRouter(r)
 
 	// Agregar la ruta de Swagger sin el middleware de validación de token
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -82,7 +82,7 @@ func main() {
 	}
 
 	err = r.RunTLS(":"+os.Getenv("SERVICE_PORT"), certFile, certKey) // escucha y sirve en 0.0.0.0:60000 (por defecto)
-	// err = r.Run(":" + os.Getenv("SERVICE_PORT"))
+	/* err = r.Run(":" + os.Getenv("SERVICE_PORT")) */
 	if err != nil {
 		fmt.Println("Error al iniciar el servidor:", err)
 		return

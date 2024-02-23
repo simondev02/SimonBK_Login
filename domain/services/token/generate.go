@@ -2,10 +2,9 @@ package services
 
 func GenerateRefreshToken(userId uint) (string, error) {
 	var Token string
-	_, err := ValidateRefreshToken(userId)
+	_, err := ValidateRefreshTokenByUserId(userId)
 	if err != nil {
 		if err.Error() == "refresh token no encontrado" {
-			// Si el token no existe, crea uno nuevo
 			Token, err = CreateRefreshToken(userId)
 			if err != nil {
 				return "", err
@@ -15,7 +14,6 @@ func GenerateRefreshToken(userId uint) (string, error) {
 			return "", err
 		}
 	} else {
-		// Si el token existe, actualízalo
 		Token, err = UpdateRefreshToken(userId)
 		if err != nil {
 			return "", err
