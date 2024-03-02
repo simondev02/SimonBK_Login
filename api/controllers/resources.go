@@ -15,7 +15,7 @@ import (
 // @Produce  json
 // @Success 200 {object} views.ResourceResponse "Successfully retrieved resources"
 // @Failure 500 {object} map[string]string "Error fetching resources"
-// @Router /users/resources [get]
+// @Router /auth/resources [get]
 func Resources(c *gin.Context) {
 	resources, err := services.GetResourcesMap()
 	if err != nil {

@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/users/login/": {
+        "/auth/login/": {
             "post": {
                 "description": "Autentica a un usuario y devuelve un token de acceso y un token de refresco.",
                 "consumes": [
@@ -58,7 +58,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/refresh": {
+        "/auth/refresh": {
             "post": {
                 "description": "Refresca un token de acceso utilizando un token de refresco válido",
                 "consumes": [
@@ -116,7 +116,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/resources": {
+        "/auth/resources": {
             "get": {
                 "description": "Retrieve resources associated with a specific role ID",
                 "consumes": [

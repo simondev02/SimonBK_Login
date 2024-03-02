@@ -16,15 +16,15 @@ func GetUserByEmail(email string) (views.User, error) {
 	}
 
 	// Carga el UserRole asociado al usuario
-	var userRole models.UserRole
-	err = db.DBConn.Where("fk_user = ?", user.ID).First(&userRole).Error
-	if err != nil {
-		return views.User{}, err
-	}
+	// var userRole models.UserRole
+	// err = db.DBConn.Where("fk_user = ?", user.ID).First(&userRole).Error
+	// if err != nil {
+	// 	return views.User{}, err
+	// }
 
 	// Carga el CompanyRole usando FkRole de UserRole
 	var companyRole models.CompanyRole
-	err = db.DBConn.Where("id = ?", userRole.FkRole).First(&companyRole).Error
+	err = db.DBConn.Where("id = ?", user.FkRole).First(&companyRole).Error
 	if err != nil {
 		return views.User{}, err
 	}
@@ -36,11 +36,11 @@ func GetUserByEmail(email string) (views.User, error) {
 		return views.User{}, err
 	}
 
-	// Carga los contactos del usuario
-	err = db.DBConn.Model(&user).Association("Contacts").Find(&user.Contacts)
-	if err != nil {
-		return views.User{}, err
-	}
+	// // Carga los contactos del usuario
+	// err = db.DBConn.Model(&user).Association("Contacts").Find(&user.Contacts)
+	// if err != nil {
+	// 	return views.User{}, err
+	// }
 
 	// Construye el objeto views.User
 	userView := views.User{
@@ -48,19 +48,19 @@ func GetUserByEmail(email string) (views.User, error) {
 		FkCompany:      user.FkCompany,
 		FkCustomer:     user.FkCustomer,
 		Email:          user.Email,
-		Name:           "",
-		Lastname:       "",
+		Name:           user.Name,
+		Lastname:       user.Lastname,
 		FkRole:         role.ID,
 		Role:           role.RoleDescription,
 		Last_login:     user.Last_login.String(),
 		Login_attempts: user.Login_attempts,
 	}
 
-	// Asignar nombre y apellido de los contactos, si existen
-	if len(user.Contacts) > 0 {
-		userView.Name = user.Contacts[0].Name
-		userView.Lastname = user.Contacts[0].Lastname
-	}
+	// // Asignar nombre y apellido de los contactos, si existen
+	// if len(user.Contacts) > 0 {
+	// 	userView.Name = user.Contacts[0].Name
+	// 	userView.Lastname = user.Contacts[0].Lastname
+	// }
 
 	return userView, nil
 }

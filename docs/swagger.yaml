@@ -63,7 +63,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /users/login/:
+  /auth/login/:
     post:
       consumes:
       - application/json
@@ -93,7 +93,7 @@ paths:
       summary: Iniciar sesión
       tags:
       - autenticación
-  /users/refresh:
+  /auth/refresh:
     post:
       consumes:
       - application/json
@@ -131,7 +131,7 @@ paths:
               type: string
             type: object
       summary: Refrescar el token de acceso
-  /users/resources:
+  /auth/resources:
     get:
       consumes:
       - application/json

@@ -22,7 +22,7 @@ import (
 // @Failure 400 {object} map[string]string "Error: Datos inválidos"
 // @Failure 401 {object} map[string]string "Error: Token inválido o expirado"
 // @Failure 500 {object} map[string]string "Error interno del servidor"
-// @Router /users/refresh [post]
+// @Router /auth/refresh [post]
 func RefreshTokenHandler(c *gin.Context) {
 	// Manejar el token de refresco
 	var input views.RefreshTokenForm
@@ -32,12 +32,15 @@ func RefreshTokenHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 	// Verificar el token de refresco
-	userId, err := services.ValidateRefreshToken(input.RefreshToken)
+	userId, err := services.GetUserIdByRefreshToken(input.RefreshToken)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": "Token inválido o expirado"})
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Token inválido o expirado"})
 		return
 	}
 	newToken, err := services.UpdateRefreshToken(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"sucees": false, "message": "Error al actualizar token de refresco"})
+	}
 
 	// Encontrar el usuario asociado con el token de refresco
 	u, err := userServices.GetUserById(userId)

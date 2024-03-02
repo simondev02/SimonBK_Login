@@ -4,23 +4,16 @@ import (
 	"SimonBK_Login/domain/models"
 	"SimonBK_Login/infra/db"
 	"errors"
-	"time"
+	"log"
 
 	"gorm.io/gorm"
 )
 
-func ValidateRefreshToken(param interface{}) (uint, error) {
+func ValidateRefreshTokenByUserId(userId uint) (uint, error) {
 	var RefreshToken models.RefreshToken
-	var Query *gorm.DB
 
-	switch v := param.(type) {
-	case string:
-		Query = db.DBConn.Where("token = ?", v).First(&RefreshToken)
-	case uint:
-		Query = db.DBConn.Where("fk_user = ?", v).First(&RefreshToken)
-	default:
-		return 0, errors.New("tipo de dato no válido")
-	}
+	log.Println("Obteniendo refresh token por fk_user")
+	Query := db.DBConn.Where("fk_user = ?", userId).First(&RefreshToken)
 	if Query.Error != nil {
 		if errors.Is(Query.Error, gorm.ErrRecordNotFound) {
 			return 0, errors.New("refresh token no encontrado")
@@ -28,9 +21,24 @@ func ValidateRefreshToken(param interface{}) (uint, error) {
 		return 0, Query.Error
 	}
 
-	curentTime := time.Now()
-	if RefreshToken.ExpiryDate.Before(curentTime) {
-		return 0, errors.New("token expirado")
+	/* 	curentTime := time.Now()
+	   	if RefreshToken.ExpiryDate.Before(curentTime) {
+	   		return 0, errors.New("token expirado")
+	   	} */
+	return RefreshToken.FkUser, nil
+}
+
+func GetUserIdByRefreshToken(token string) (uint, error) {
+	var RefreshToken models.RefreshToken
+
+	log.Println("Obteniendo refresh token")
+	Query := db.DBConn.Where("token = ?", token).First(&RefreshToken)
+	if Query.Error != nil {
+		if errors.Is(Query.Error, gorm.ErrRecordNotFound) {
+			return 0, errors.New("refresh token no encontrado")
+		}
+		return 0, Query.Error
 	}
+
 	return RefreshToken.FkUser, nil
 }
