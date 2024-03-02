@@ -10,7 +10,7 @@ func GetResourcesAccessDetail() ([]models.ResourceRoleAccess, error) {
 
 	err := db.DBConn.
 		Table("permissions_by_roles").
-		Select("resources.name as resource, actions.action, DISTINCT roles.role_description").
+		Select("resources.name as resource, actions.action, roles.role_description").
 		Joins("INNER JOIN permissions ON permissions_by_roles.fk_permission = permissions.id").
 		Joins("INNER JOIN resources ON permissions.fk_resource = resources.id").
 		Joins("INNER JOIN actions ON permissions.fk_action = actions.id").
